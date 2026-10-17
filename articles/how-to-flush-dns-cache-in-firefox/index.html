@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to flush DNS Cache in Firefox · benni.tech</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <h1><a href="/">benni.tech</a></h1>
+  <nav><a href="/">home</a><a href="/cv/">cv</a><a href="/projects/">projects</a><a href="/bookmarks/">bookmarks</a><a href="/contact/">contact</a></nav>
+</header>
+
+<h2>How to flush DNS Cache in Firefox</h2>
+<p class="date">2021-09-15</p>
+
+<p>Today I have moved the domain record <strong>benn.tech</strong> from based an ip address to a resolution using IPFS based on fleek. For DNS is am using <a href="https://namecheap.com/">Namecheap</a>. This is how the setup now looks like:</p>
+<table>
+<tr><th>Type</th><th>Host</th><th>Value</th></tr>
+<tr><td>CNAME</td><td>_dnslink.www</td><td>_dnslink.bennitech.on.fleek.co.</td></tr>
+<tr><td>CNAME</td><td>_dnslink</td><td>_dnslink.bennitech.on.fleek.co.</td></tr>
+<tr><td>CNAME</td><td>@</td><td>4cbeeb4387fc7eacf4a4.b-cdn.net.</td></tr>
+<tr><td>CNAME</td><td>www</td><td>4cbeeb4387fc7eacf4a4.b-cdn.net.</td></tr>
+</table>
+<p>I have verified the DNS setup using <code>host -a -t any benni.tech 8.8.8.8</code>. The response was good. Also <a href="https://dnschecker.org/#CNAME/benni.tech">DNS Checker</a> was showng the correct response.</p>
+<p>But a <code>host -a -t any benni.tech</code> which is served by my local dns server based on <a href="https://pi-hole.net">Pihole</a> was still showing the wrong ip. A <code>pihole restartdns</code> helped here before the TTL has expired. So that curl and other tools were showing the right responses.</p>
+<p>Firefox was still showing the old page. So that I have cleared the DNS cache in firefox using this <a href="https://stackoverflow.com/questions/59932525/how-can-i-force-firefox-to-reset-its-dns-cache-on-demand">entry</a> on Stackoverflow. I have just opened <code>about:networking#dns</code> and have pressed the button <code>Clear DNS Cache</code>. This solved the problem.</p>
+<p>This blog is now available via:</p>
+<ul>
+<li><a href="https://ipfs.io/ipns/benni.tech/">https://ipfs.io/ipns/benni.tech/</a></li>
+<li><a href="https://ipfs.io/ipfs/QmdxaxczCgnNgDA4wy6gjAJoKqXFKJiYhquKYqUHMk4ysu/">https://ipfs.io/ipfs/QmdxaxczCgnNgDA4wy6gjAJoKqXFKJiYhquKYqUHMk4ysu/</a></li>
+<li><a href="https://bennitech.on.fleek.co/">https://bennitech.on.fleek.co/</a></li>
+<li><a href="https://ipfs.fleek.co/ipfs/QmdxaxczCgnNgDA4wy6gjAJoKqXFKJiYhquKYqUHMk4ysu/">https://ipfs.fleek.co/ipfs/QmdxaxczCgnNgDA4wy6gjAJoKqXFKJiYhquKYqUHMk4ysu/</a></li>
+<li><a href="https://benni.tech/">https://benni.tech/</a></li>
+</ul>
+
+<footer>benni.tech · <a href="/contact/#impressum">impressum</a></footer>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Getting Started with Azure and Terraform · benni.tech</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <h1><a href="/">benni.tech</a></h1>
+  <nav><a href="/">home</a><a href="/cv/">cv</a><a href="/projects/">projects</a><a href="/bookmarks/">bookmarks</a><a href="/contact/">contact</a></nav>
+</header>
+
+<h2>Getting Started with Azure and Terraform</h2>
+<p class="date">2021-09-26</p>
+
+<p>Today I thought lets try <a href="https://azure.com">Azure</a> as a cloud provider because I have never used Azure. I have used a couple of different other cloud provider but for whatever reason never Azure. First I had a look into how to provison resources on Azure in an automatd manner. Their own provisioning tool is <a href="https://azure.microsoft.com/en-us/features/resource-manager/">Azure Resource Manager</a> which is a DSL that must be written in json. Well, this is for me as an vim user. So that I have decided to do my first tries using a tool I am familier with. So that I have tried <a href="https://terraform.io">Terraform</a> which is a nother language but from my perspective by far simpler to write using a simple text editor.</p>
+<h3>Prerequesites</h3>
+<ul>
+<li>You must have an Azure accunt.</li>
+<li>This how-to is written for linux. For other operating systems commands and behaviour might be different.</li>
+</ul>
+<h3>Preperation</h3>
+<p><em>Installing Terraform</em></p>
+<pre><code>curl -O -L https://releases.hashicorp.com/terraform/1.0.7/terraform_1.0.7_linux_amd64.zip
+terraform_1.0.7_linux_amd64.zip
+terraform -version</code></pre>
+<p><em>Installing Azure CLI</em></p>
+<pre><code>curl -L https://aka.ms/InstallAzureCli | bash</code></pre>
+<h3>Getting Started</h3>
+<p><em>Login via Azure CLI</em></p>
+<pre><code>az login
+az account show</code></pre>
+<p><em>Write main.tf</em></p>
+<p>I had a look into the examples from <a href="https://github.com/hashicorp/terraform-provider-azurerm/tree/main/examples">terraform-prodiver-azurerm</a> and compiled this simple <code>main.tf</code> which will only provision an Azure Resource Group.</p>
+<pre><code># Configure the Azure provider
+terraform {
+  required_providers {
+    azurerm = {
+      source  = &quot;hashicorp/azurerm&quot;
+      version = &quot;~&gt; 2.78&quot;
+    }
+  }
+
+  required_version = &quot;&gt;= 1.0.7&quot;
+}
+
+provider &quot;azurerm&quot; {
+  features {}
+}
+
+resource &quot;azurerm_resource_group&quot; &quot;rg&quot; {
+  name     = &quot;test-rg&quot;
+  location = &quot;westus2&quot;
+}</code></pre>
+<p><em>Initialize Terraform</em></p>
+<pre><code>terraform init</code></pre>
+<p><em>Format Configuraton</em></p>
+<pre><code>terraform fmt</code></pre>
+<p><em>Validate Configuraton</em></p>
+<pre><code>terraform validate</code></pre>
+<p><em>Plan Configuration</em></p>
+<pre><code>terraform plan</code></pre>
+<p><em>Apply Configuration</em></p>
+<pre><code>terraform apply</code></pre>
+<p>That's it for a getting started.</p>
+
+<footer>benni.tech · <a href="/contact/#impressum">impressum</a></footer>
+</body>
+</html>

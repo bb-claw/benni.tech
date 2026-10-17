@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How IPFS is showing up-to-date Information · benni.tech</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <h1><a href="/">benni.tech</a></h1>
+  <nav><a href="/">home</a><a href="/cv/">cv</a><a href="/projects/">projects</a><a href="/bookmarks/">bookmarks</a><a href="/contact/">contact</a></nav>
+</header>
+
+<h2>How IPFS is showing up-to-date Information</h2>
+<p class="date">2021-09-23</p>
+
+<p>After a few small changes of the last article I have seen that the current IPFS has been changed to a newer one. Changing is not the acuarate working. A new hash been created and the old one exists too but will not be used anymore. The current one is <code>Qmd1vjCbc5yzndS6TZg9KS5hhPVNyJL2RX8DpxWGD2Jeop</code> which is already outdated after posting this article. How do I have observed this?</p>
+<ol>
+<li>First the hash that <a href="https://fleek.co">Fleek</a> is pointing to has been changed on the UI.</li>
+<li>Secondary <code>dig +short TXT _dnslink.benni.tech | sed -E 's/"dnslink=(.*)"/\1/g'</code> is pointing now to <code>/ipfs/Qmd1vjCbc5yzndS6TZg9KS5hhPVNyJL2RX8DpxWGD2Jeop</code></li>
+<li>Third <a href="https://ipfs.io/ipfs/QmdxaxczCgnNgDA4wy6gjAJoKqXFKJiYhquKYqUHMk4ysu/">https://ipfs.io/ipfs/QmdxaxczCgnNgDA4wy6gjAJoKqXFKJiYhquKYqUHMk4ysu/</a> was still showing the old data.</li>
+</ol>
+<p>Secondary</p>
+<ol>
+<li>Fourth <code>ipfs dns benni.tech</code> is pointing to <code>/ipfs/Qmd1vjCbc5yzndS6TZg9KS5hhPVNyJL2RX8DpxWGD2Jeop</code> too</li>
+<li>Fifth <code>ipfs cat /ipfs/Qmd1vjCbc5yzndS6TZg9KS5hhPVNyJL2RX8DpxWGD2Jeop/index.html</code> is showing up-to-date data.</li>
+</ol>
+<p>So that</p>
+<ol>
+<li>for all new data will be a new IPFS hash created</li>
+<li><a href="https://fleek.co">Fleek</a> is pointing after every update to the current/latest IPFS hash. This is how <a href="https://fleek.co">Fleek</a> is ensuring the latest page will shown.</li>
+</ol>
+
+<footer>benni.tech · <a href="/contact/#impressum">impressum</a></footer>
+</body>
+</html>
