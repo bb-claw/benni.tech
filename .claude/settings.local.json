@@ -8,7 +8,11 @@
       "Bash(curl -s \"https://hister.org/_app/immutable/assets/0.w6WypqPC.css\")",
       "Bash(rtk curl *)",
       "Bash(curl -si \"http://localhost:8000/cv/?style=brutal\")",
-      "Bash(curl -si --cookie \"style=brutal\" \"http://localhost:8000/cv/\")"
+      "Bash(curl -si --cookie \"style=brutal\" \"http://localhost:8000/cv/\")",
+      "Bash(gzip -c /home/benni/git/benni.tech/style.css)",
+      "Bash(gzip -c /home/benni/git/benni.tech/style-brutal.css)",
+      "Bash(gzip -c /home/benni/git/benni.tech/style-clean.css)",
+      "Bash(rtk ls *)"
     ]
   }
 }
