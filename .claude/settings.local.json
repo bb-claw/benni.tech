@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:www.qrz.com)"
+      "WebFetch(domain:www.qrz.com)",
+      "WebFetch(domain:hister.org)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl -s https://hister.org/)",
+      "Bash(curl -s \"https://hister.org/_app/immutable/assets/0.w6WypqPC.css\")",
+      "Bash(rtk curl *)",
+      "Bash(curl -si \"http://localhost:8000/cv/?style=brutal\")",
+      "Bash(curl -si --cookie \"style=brutal\" \"http://localhost:8000/cv/\")"
     ]
   }
 }

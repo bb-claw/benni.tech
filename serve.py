@@ -4,7 +4,7 @@ import http.server
 import os
 
 PORT = 8000
-STYLES = {"mono", "brutal"}
+STYLES = {"mono", "brutal", "clean"}
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
@@ -35,8 +35,11 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         path = self.path.split("?")[0]
         if path.endswith(".html") or path.endswith("/") or path == "":
             content = source.read()
-            if getattr(self, "_active_style", "mono") == "brutal":
+            active = getattr(self, "_active_style", "mono")
+            if active == "brutal":
                 content = content.replace(b"/style.css", b"/style-brutal.css")
+            elif active == "clean":
+                content = content.replace(b"/style.css", b"/style-clean.css")
             outputfile.write(content)
         else:
             super().copyfile(source, outputfile)
@@ -57,4 +60,5 @@ if __name__ == "__main__":
     print(f"Serving benni.tech at http://localhost:{PORT}")
     print(f"  ?style=mono    — default theme")
     print(f"  ?style=brutal  — brutal theme")
+    print(f"  ?style=clean   — clean theme")
     http.server.test(HandlerClass=Handler, port=PORT, bind="127.0.0.1")
