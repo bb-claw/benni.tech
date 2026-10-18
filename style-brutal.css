@@ -1,0 +1,45 @@
+/* benni.tech — brutal theme */
+:root {
+  --bg: #fffff0;
+  --fg: #111111;
+  --muted: #444444;
+  --accent: #c47900;
+  --rule: #111111;
+  --code: #f5f5dc;
+  --shadow: 4px 4px 0 #111111;
+}
+html { background: var(--bg); color: var(--fg); }
+body {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+  font: 16px/1.6 system-ui, Arial, sans-serif;
+}
+a { color: var(--accent); text-decoration: none; font-weight: bold; }
+a:hover, a:focus { text-decoration: underline; }
+header {
+  border: 3px solid var(--rule);
+  padding: .75rem 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow);
+}
+header h1 { font-size: 1.25rem; margin: 0; }
+header h1 a { color: var(--fg); }
+nav { margin-top: .25rem; color: var(--muted); }
+nav a { margin-right: 1rem; color: var(--fg); }
+h2 { font-size: 1.1rem; margin: 2rem 0 .5rem; border-bottom: 3px solid var(--rule); padding-bottom: .2rem; }
+ul { padding-left: 1.25rem; }
+li { margin: .2rem 0; }
+.date { color: var(--muted); }
+.muted { color: var(--muted); }
+dl { display: grid; grid-template-columns: max-content 1fr; gap: .2rem 1rem; }
+dt { color: var(--muted); font-weight: bold; }
+dd { margin: 0; }
+footer { border-top: 3px solid var(--rule); margin-top: 3rem; padding-top: .5rem; color: var(--muted); font-size: .85rem; }
+h3 { font-size: 1rem; margin: 1.5rem 0 .25rem; border-left: 4px solid var(--accent); padding-left: .5rem; }
+code { background: var(--code); padding: 0 .2em; border: 1px solid var(--rule); }
+pre { background: var(--code); padding: .75rem; overflow-x: auto; border: 2px solid var(--rule); box-shadow: var(--shadow); }
+pre code { padding: 0; border: none; }
+table { border-collapse: collapse; display: block; overflow-x: auto; }
+th, td { border: 2px solid var(--rule); padding: .2rem .5rem; text-align: left; }
+th { background: var(--fg); color: var(--bg); }
