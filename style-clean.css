@@ -10,12 +10,12 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #16131a;
-    --fg: #f0ece4;
-    --muted: #9990a0;
-    --accent: #a78bfa;
-    --rule: #2a2535;
-    --code: #1e1b26;
+    --bg: #1c1710;
+    --fg: #f0e8d8;
+    --muted: #a09070;
+    --accent: #b48ef0;
+    --rule: #332b1e;
+    --code: #251e14;
   }
 }
 html { background: var(--bg); color: var(--fg); }
