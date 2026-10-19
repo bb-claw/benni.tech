@@ -7,11 +7,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Plain static site: hand-written HTML + one CSS file. No build step, no JavaScript, no web fonts, no external requests.
 
 ```
-index.html              home page: intro, dated notes, article list
+index.html              home page: bio, Notes feed (3 items), changelog link
 cv/ projects/ bookmarks/ contact/   one index.html each (clean URLs)
 articles/<slug>/        old blog posts (2021, converted from Hugo; same URLs)
 about/                  redirect from old Hugo /about/ to /contact/
-style.css               all styling; CSS variables at top for light + dark theme
+style-clean.css         default theme (beige/hister)
+style-mono.css          terminal/monospace theme
+style-brutal.css        brutalist theme
 ping.txt                "ok\n" — connectivity-check endpoint (linked from footer)
 ```
 
@@ -29,12 +31,19 @@ rsync -av --delete --exclude .git --exclude README.md --exclude LICENSE ./ user@
 
 ## Adding content
 
-**New note** — prepend one `<li>` to the Notes list in `index.html`:
+**New note** — prepend one `<li>` to the Notes list in `index.html` and remove the oldest so exactly 3 remain:
 ```html
-<li><span class="date">2026-10-06</span> Text of the note. <a href="...">link</a></li>
+<li><span class="date">YYYY-MM-DD</span> Text of the note. <a href="...">link</a></li>
 ```
 
-**New page or article** — copy an existing `*/index.html`, update `<title>` and content. For a new top-level page also add it to the `<nav>` in every page.
+**New page or article** — copy an existing `*/index.html`, update `<title>`, `<meta name="description">`, and content. For a new top-level page also add it to the `<nav>` in every page.
+
+**Meta descriptions** — every page must have `<meta name="description" content="...">` between the viewport meta and `<title>`. Keep it under 160 characters. `about/index.html` (redirect) is exempt.
+
+**Changelog** — update `changelog/index.html` whenever visible content changes (not for tooling or CSS-only changes). Prepend one `<li>`:
+```html
+<li><span class="date">YYYY-MM-DD</span> Description of the change.</li>
+```
 
 ## CSS conventions
 
