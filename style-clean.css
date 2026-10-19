@@ -94,6 +94,11 @@ pre {
   font-size: .875rem;
 }
 pre code { padding: 0; }
+img { max-width: 100%; height: auto; }
 table { border-collapse: collapse; display: block; overflow-x: auto; }
 th, td { border: 1px solid var(--rule); padding: .4rem .75rem; text-align: left; }
 th { font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; }
+@media (max-width: 30rem) {
+  dl { grid-template-columns: 1fr; }
+  dt { margin-top: .5rem; }
+}

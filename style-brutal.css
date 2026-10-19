@@ -40,6 +40,11 @@ h3 { font-size: 1rem; margin: 1.5rem 0 .25rem; border-left: 4px solid var(--acce
 code { background: var(--code); padding: 0 .2em; border: 1px solid var(--rule); }
 pre { background: var(--code); padding: .75rem; overflow-x: auto; border: 2px solid var(--rule); box-shadow: var(--shadow); }
 pre code { padding: 0; border: none; }
+img { max-width: 100%; height: auto; }
 table { border-collapse: collapse; display: block; overflow-x: auto; }
 th, td { border: 2px solid var(--rule); padding: .2rem .5rem; text-align: left; }
 th { background: var(--fg); color: var(--bg); }
+@media (max-width: 30rem) {
+  dl { grid-template-columns: 1fr; }
+  dt { margin-top: .4rem; }
+}

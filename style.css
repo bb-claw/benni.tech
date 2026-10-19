@@ -45,5 +45,10 @@ h3 { font-size: 1rem; margin: 1.5rem 0 .25rem; }
 code { background: var(--code); padding: 0 .2em; }
 pre { background: var(--code); padding: .75rem; overflow-x: auto; }
 pre code { padding: 0; }
+img { max-width: 100%; height: auto; }
 table { border-collapse: collapse; display: block; overflow-x: auto; }
 th, td { border: 1px solid var(--rule); padding: .2rem .5rem; text-align: left; }
+@media (max-width: 30rem) {
+  dl { grid-template-columns: 1fr; }
+  dt { margin-top: .4rem; }
+}
