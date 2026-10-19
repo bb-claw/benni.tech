@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Plain static site: hand-written HTML + one CSS file. No build step, no JavaScript, no web fonts, no external requests.
 
 ```
-index.html              home page: bio, Notes feed (3 items), changelog link
+index.html              home page: bio, Mini Feed (3 items), changelog link
 cv/ projects/ bookmarks/ contact/   one index.html each (clean URLs)
 articles/<slug>/        old blog posts (2021, converted from Hugo; same URLs)
 about/                  redirect from old Hugo /about/ to /contact/
@@ -31,7 +31,7 @@ rsync -av --delete --exclude .git --exclude README.md --exclude LICENSE ./ user@
 
 ## Adding content
 
-**New note** — prepend one `<li>` to the Notes list in `index.html` and remove the oldest so exactly 3 remain:
+**New mini feed entry** — prepend one `<li>` to the Mini Feed list in `index.html` and remove the oldest so exactly 3 remain:
 ```html
 <li><span class="date">YYYY-MM-DD</span> Text of the note. <a href="...">link</a></li>
 ```
