@@ -12,6 +12,7 @@ cv/ projects/ bookmarks/ contact/   one index.html each (clean URLs)
 articles/<slug>/        old blog posts (2021, converted from Hugo; same URLs)
 about/                  redirect from old Hugo /about/ to /contact/
 style.css               all styling; CSS variables at top for light + dark theme
+ping.txt                "ok\n" — connectivity-check endpoint (linked from footer)
 ```
 
 ## Preview
