@@ -43,8 +43,8 @@ header h1 {
   text-transform: uppercase;
 }
 header h1 a { color: var(--fg); }
-nav { color: var(--muted); font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
-nav a { margin-right: 1.5rem; color: var(--muted); }
+nav { color: var(--muted); font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; display: flex; flex-wrap: wrap; gap: .2rem 1.25rem; }
+nav a { margin-right: 0; color: var(--muted); }
 nav a:hover { color: var(--accent); text-decoration: none; }
 h2 {
   font-size: 2rem;
@@ -101,7 +101,5 @@ th { font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: 
 @media (max-width: 30rem) {
   dl { grid-template-columns: 1fr; }
   dt { margin-top: .5rem; }
-  nav { letter-spacing: .04em; }
-  nav a { margin-right: .9rem; }
-  footer { letter-spacing: .02em; }
+  footer { letter-spacing: .01em; font-size: .75rem; }
 }

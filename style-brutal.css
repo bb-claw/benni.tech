@@ -25,8 +25,8 @@ header {
 }
 header h1 { font-size: 1.25rem; margin: 0; }
 header h1 a { color: var(--fg); }
-nav { margin-top: .25rem; color: var(--muted); }
-nav a { margin-right: 1rem; color: var(--fg); }
+nav { margin-top: .25rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: .1rem .75rem; }
+nav a { margin-right: 0; color: var(--fg); }
 h2 { font-size: 1.1rem; margin: 2rem 0 .5rem; border-bottom: 3px solid var(--rule); padding-bottom: .2rem; }
 ul { padding-left: 1.25rem; }
 li { margin: .2rem 0; }
