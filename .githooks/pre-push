@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Pre-push hook: full-repo sweep before every push.
+# Installed by: git config core.hooksPath .githooks
+set -euo pipefail
+
+rc=0
+ok()   { printf '[pre-push] ok:   %s\n' "$*"; }
+fail() { printf '[pre-push] FAIL: %s\n' "$*"; rc=1; }
+
+REPO_ROOT=$(git rev-parse --show-toplevel)
+
+# ── 1. CLAUDE.md size ────────────────────────────────────────────────────────
+limit=200
+file="$REPO_ROOT/CLAUDE.md"
+if [[ -f "$file" ]]; then
+    lines=$(wc -l < "$file")
+    if [[ $lines -le $limit ]]; then
+        ok "CLAUDE.md: ${lines} lines (limit ${limit})"
+    else
+        fail "CLAUDE.md: ${lines} lines — exceeds ${limit}-line limit (trim it)"
+    fi
+fi
+
+# ── 2. memory/*.md size ───────────────────────────────────────────────────────
+limit=150
+while IFS= read -r f; do
+    [[ $(basename "$f") == "MEMORY.md" ]] && continue
+    lines=$(wc -l < "$f")
+    name="${f#$REPO_ROOT/}"
+    if [[ $lines -le $limit ]]; then
+        ok "${name}: ${lines} lines (limit ${limit})"
+    else
+        fail "${name}: ${lines} lines — exceeds ${limit}-line limit (trim it)"
+    fi
+done < <(find "$REPO_ROOT" -path "*/memory/*.md" -not -path "*/.git/*")
+
+# ── Result ───────────────────────────────────────────────────────────────────
+if [[ $rc -eq 0 ]]; then
+    printf '[pre-push] all checks passed\n'
+else
+    printf '[pre-push] push blocked — fix the issues above\n'
+fi
+exit $rc

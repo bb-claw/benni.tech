@@ -1,9 +1,29 @@
 #!/usr/bin/env bash
-# Enforce conventional commits: <type>(<scope>): <description>
-commit_regex='^(feat|fix|docs|style|refactor|chore|perf|ci)(\(.+\))?: .+'
-if ! grep -qE "$commit_regex" "$1"; then
-  echo "Bad commit message. Use: <type>(<scope>): <description>"
-  echo "Types: feat fix docs style refactor chore perf ci"
-  echo "Example: style(css): fix mobile padding on clean theme"
-  exit 1
+# Enforce conventional commits: <type>[(<scope>)]: <description>
+# Installed by: git config core.hooksPath .githooks
+set -euo pipefail
+
+msg_file="$1"
+subject=$(head -1 "$msg_file")
+
+# Pass through git-generated messages
+if printf '%s\n' "$subject" | grep -qE '^(Merge|Revert) |^(fixup|squash)!'; then
+    exit 0
 fi
+
+types='feat|fix|docs|style|refactor|chore|perf|ci'
+if printf '%s\n' "$subject" | grep -qE "^(${types})(\([^)]+\))?!?: .+"; then
+    exit 0
+fi
+
+printf '[commit-msg] ERROR: commit message does not follow conventional commit format\n' >&2
+printf '\n' >&2
+printf '  Format:  <type>[(<scope>)]: <description>\n' >&2
+printf '  Types:   feat  fix  docs  style  refactor  chore  perf  ci\n' >&2
+printf '\n' >&2
+printf '  OK:      feat(hamradio): add new contest results\n' >&2
+printf '  OK:      fix(css): correct mobile padding on clean theme\n' >&2
+printf '  OK:      chore: bump CSS version to 2026-10-19 19:41\n' >&2
+printf '\n' >&2
+printf '  Got:     %s\n' "$subject" >&2
+exit 1
