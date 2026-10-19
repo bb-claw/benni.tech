@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+staged_css=$(git diff --cached --name-only | grep '\.css$' || true)
+[ -z "$staged_css" ] && exit 0
+
+# CSS is staged — verify version comment was bumped vs HEAD
+for f in $staged_css; do
+  old_ver=$(git show HEAD:"$f" 2>/dev/null | grep -o 'v: [0-9: -]*' | head -1 || true)
+  new_ver=$(grep -o 'v: [0-9: -]*' "$f" | head -1 || true)
+  if [ "$old_ver" = "$new_ver" ]; then
+    echo "ERROR: $f changed but /* v: */ comment not bumped (still: $new_ver)"
+    echo "Fix:   sed -i \"s|/\\* v: .* \\*/|/* v: \$(date '+%Y-%m-%d %H:%M') */|\" $f"
+    exit 1
+  fi
+done
+
+# Verify all HTML files are staged with the updated ?v= query string
+total_html=$(find . -name "*.html" -not -path "./.git/*" | wc -l)
+staged_html=$(git diff --cached --name-only | grep '\.html$' | wc -l)
+if [ "$staged_html" -lt "$total_html" ]; then
+  echo "ERROR: CSS changed but only $staged_html/$total_html HTML files staged."
+  echo "Fix:   VER=\$(date +%Y%m%d%H%M)"
+  echo "       find . -name '*.html' -not -path './.git/*' | xargs sed -i \"s|style\\.css?v=[0-9]*|style.css?v=\$VER|g\""
+  echo "       git add \$(find . -name '*.html' -not -path './.git/*')"
+  exit 1
+fi

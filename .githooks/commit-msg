@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Enforce conventional commits: <type>(<scope>): <description>
+commit_regex='^(feat|fix|docs|style|refactor|chore|perf|ci)(\(.+\))?: .+'
+if ! grep -qE "$commit_regex" "$1"; then
+  echo "Bad commit message. Use: <type>(<scope>): <description>"
+  echo "Types: feat fix docs style refactor chore perf ci"
+  echo "Example: style(css): fix mobile padding on clean theme"
+  exit 1
+fi
