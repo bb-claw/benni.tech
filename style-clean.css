@@ -101,4 +101,7 @@ th { font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: 
 @media (max-width: 30rem) {
   dl { grid-template-columns: 1fr; }
   dt { margin-top: .5rem; }
+  nav { letter-spacing: .04em; }
+  nav a { margin-right: .9rem; }
+  footer { letter-spacing: .02em; }
 }
