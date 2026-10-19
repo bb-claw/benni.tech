@@ -1,4 +1,4 @@
-/* v: 2026-10-19 19:08 */
+/* v: 2026-10-19 19:41 */
 /* benni.tech - hister theme: warm beige, heavy display headings, purple accent */
 :root {
   --bg: #f2ede4;
@@ -100,6 +100,8 @@ table { border-collapse: collapse; display: block; overflow-x: auto; }
 th, td { border: 1px solid var(--rule); padding: .4rem .75rem; text-align: left; }
 th { font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; }
 @media (max-width: 30rem) {
+  body { padding-left: 1rem; padding-right: 1rem; }
+  h2 { font-size: 1.4rem; }
   dl { grid-template-columns: 1fr; }
   dt { margin-top: .5rem; }
   footer { letter-spacing: 0; font-size: .7rem; }
