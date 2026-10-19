@@ -101,5 +101,5 @@ th { font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: 
 @media (max-width: 30rem) {
   dl { grid-template-columns: 1fr; }
   dt { margin-top: .5rem; }
-  footer { letter-spacing: .01em; font-size: .75rem; }
+  footer { letter-spacing: 0; font-size: .7rem; }
 }
