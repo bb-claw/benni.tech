@@ -38,7 +38,7 @@ rsync -av --delete --exclude .git --exclude README.md --exclude LICENSE ./ user@
 
 ## CSS conventions
 
-Colours are CSS variables defined at the top of `style.css` with a `@media (prefers-color-scheme: dark)` block overriding them. All styling lives in that single file — no inline styles, no per-page stylesheets.
+Three themes: `style-clean.css` (default), `style-mono.css`, `style-brutal.css`. Colours are CSS variables at the top of each file with a `@media (prefers-color-scheme: dark)` block. No inline styles, no per-page stylesheets.
 
 ## CSS versioning (cache-busting)
 
@@ -48,7 +48,7 @@ BunnyCDN caches CSS for 30 days. **When CSS changes**, always:
 2. Update `?v=YYYYMMDDHHММ` in all HTML files:
    ```sh
    VER=$(date +%Y%m%d%H%M)
-   find . -name "*.html" -not -path "./.git/*" | xargs sed -i "s|style\.css?v=[0-9]*|style.css?v=$VER|g"
+   find . -name "*.html" -not -path "./.git/*" | xargs sed -i "s|style-clean\.css?v=[0-9]*|style-clean.css?v=$VER|g"
    ```
 
 HTML-only changes do not need a version bump (HTML is served `no-cache`).

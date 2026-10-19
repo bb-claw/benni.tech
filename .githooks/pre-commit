@@ -30,13 +30,13 @@ done
 
 [[ $rc -ne 0 ]] && exit $rc
 
-# Verify all HTML files are staged with the updated ?v= query string
-total_html=$(find . -name "*.html" -not -path "./.git/*" | wc -l)
+# Verify all HTML files containing the CSS link are staged with updated ?v=
+total_html=$(grep -rl "style-clean\.css?v=" . --include="*.html" 2>/dev/null | grep -v ".git" | wc -l)
 staged_html=$(git diff --cached --name-only | grep '\.html$' | wc -l)
 if [[ "$staged_html" -lt "$total_html" ]]; then
     fail "CSS changed but only ${staged_html}/${total_html} HTML files staged"
     printf '         Fix: VER=$(date +%%Y%%m%%d%%H%%M)\n' >&2
-    printf '              find . -name "*.html" -not -path "./.git/*" | xargs sed -i "s|style\\.css?v=[0-9]*|style.css?v=$$VER|g"\n' >&2
+    printf '              find . -name "*.html" -not -path "./.git/*" | xargs sed -i "s|style-clean\\.css?v=[0-9]*|style-clean.css?v=$$VER|g"\n' >&2
     printf '              git add $(find . -name "*.html" -not -path "./.git/*")\n' >&2
     rc=1
 else
