@@ -72,7 +72,9 @@ def test_nginx_theme_map_exists():
 
 <h3>Pattern 3: location block ordering</h3>
 
-<p>This is the one that requires real thought. In nginx, a <code>location ~*</code> regex block must appear <em>before</em> a general <code>location /</code> block or the more specific rule never fires — the general block wins first. Getting this wrong silently breaks caching. Cache headers stop being sent, the CDN stops caching assets, and nothing errors.</p>
+<p>Nginx selects location blocks in a defined priority order: exact match (<code>=</code>), then preferential prefix (<code>^~</code>), then regex (<code>~</code> and <code>~*</code>), then longest prefix, then the default <code>/</code>. Regex locations always beat a plain <code>location /</code> prefix — regardless of where they appear in the file. File order only matters when <em>multiple regex blocks</em> could match the same request: nginx picks the first one listed.</p>
+
+<p>So the ordering test below is not a correctness guard (the regex block wins either way), but a convention guard. When you have several regex blocks — say, one for static assets and one for API paths — their relative order determines which one fires for ambiguous URLs. Enforcing a canonical order in the config keeps that logic stable as the file grows:</p>
 
 <pre><code>def test_static_location_before_root_location(self):
     content = NGINX_DEFAULT.read_text()
@@ -80,7 +82,7 @@ def test_nginx_theme_map_exists():
     root_pos = content.index("location /")
     assert static_pos &lt; root_pos</code></pre>
 
-<p>Obvious once written. Would never occur to you to check manually on every edit.</p>
+<p>The test also documents intent: the static assets block is meant to be the first thing evaluated. If someone adds another regex block above it that accidentally matches <code>.css</code> files, this won't catch that — but it does catch the common mistake of appending a new <code>location</code> block at the end of the file without thinking about order.</p>
 
 <h3>Pattern 4: negative assertions</h3>
 
@@ -153,7 +155,7 @@ def test_theme_map_default_is_clean(self):
 <ul>
   <li><strong>Missing <code>charset</code> on CSS</strong>: a config reorganisation removed <code>charset_types</code>. CSS was served without a charset header; the CDN mis-detected content type.</li>
   <li><strong>Wrong <code>sub_filter</code> target after a rename</strong>: renamed <code>style.css</code> → <code>style-mono.css</code>; <code>sub_filter</code> still targeted the old path; theme switching stopped working silently.</li>
-  <li><strong>Static location after root location</strong>: adding a new <code>location</code> block accidentally pushed the regex block below <code>location /</code>; cache headers stopped applying.</li>
+  <li><strong>Regex location ordering</strong>: adding a new <code>location ~*</code> block above the static assets block caused it to match <code>.css</code> files first, skipping the cache headers.</li>
   <li><strong><code>Set-Cookie</code> at server level</strong>: during a refactor, the cookie-setting logic was left outside of <code>location /</code>; every static asset response started setting a cookie.</li>
 </ul>
 
