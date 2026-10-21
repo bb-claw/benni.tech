@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Test nginx config files with Python and pytest — no running process needed. Directive checks, location ordering, Jinja2 templates, and real bugs caught.">
-<title>Testing Nginx Configuration Without Running Nginx · benni.tech</title>
+<title>172 Nginx Tests, 0.31 Seconds, No Running Nginx · benni.tech</title>
 <link rel="stylesheet" href="/style-clean.css?v=202610192033">
 </head>
 <body>
@@ -13,7 +13,7 @@
   <nav><a href="/">home</a><a href="/cv/">cv</a><a href="/projects/">projects</a><a href="/articles/">articles</a><a href="/hamradio/">hamradio</a><a href="/bookmarks/">bookmarks</a><a href="/changelog/">changelog</a><a href="/contact/">contact</a></nav>
 </header>
 
-<h2>Testing Nginx Configuration Without Running Nginx</h2>
+<h2>172 Nginx Tests, 0.31 Seconds, No Running Nginx</h2>
 <p class="date">2026-10-20</p>
 
 <p>Nginx configuration is code. It has logic, edge cases, and bugs. But unlike most code, it almost never has tests. The usual workflow is: edit <code>nginx.conf</code>, reload, click around, ship it. When production breaks, you find out then.</p>
@@ -26,30 +26,39 @@
 
 <p>This is the approach: read config files as strings, assert on their content with pytest. No Docker, no running process, no ports, no integration environment needed for the bulk of the tests.</p>
 
-<h3>Setup</h3>
+<h3>Real bugs these tests caught</h3>
 
-<p>No special libraries needed beyond pytest. Add Jinja2 if you use Ansible templates (you probably do):</p>
+<p>These are not hypothetical. Each incident happened and went unnoticed until something broke in production:</p>
+
+<ul>
+  <li><strong>Missing charset on CSS</strong>: a config reorganisation removed the <code>charset_types</code> directive. Nginx stopped appending <code>; charset=utf-8</code> to the CSS <code>Content-Type</code> header. The CDN cached the response without a charset; some clients failed to interpret the UTF-8 content correctly.</li>
+  <li><strong>Wrong <code>sub_filter</code> target after a rename</strong>: renamed <code>style.css</code> → <code>style-mono.css</code>; the <code>sub_filter</code> directive still targeted the old filename; theme switching silently stopped working for all visitors with a cached cookie.</li>
+  <li><strong>Regex location ordering</strong>: adding a new <code>location ~*</code> block above the static assets block caused it to match <code>.css</code> files first, skipping the cache headers entirely.</li>
+  <li><strong><code>Set-Cookie</code> at server level</strong>: during a refactor, the cookie-setting logic was left outside <code>location /</code>; every static asset response started setting a cookie, which prevented the CDN from caching any of them.</li>
+</ul>
+
+<p>All four were caught by text-based tests before the next deploy — no nginx process, no Docker, no network.</p>
+
+<h3>Pattern 1: file existence</h3>
+
+<p>Install pytest and Jinja2 (for Ansible templates), then declare your config file paths once at the top of the test file:</p>
 
 <pre><code>pip install pytest jinja2</code></pre>
-
-<p>The test file lives next to the rest of the infrastructure tests. Declare file paths once at the top — this is the only place you'll ever need to update if a file moves:</p>
 
 <pre><code>from pathlib import Path
 
 REPO = Path(__file__).parent.parent
 NGINX_DEFAULT = REPO / "docker/website/nginx-default.conf.j2"
 NGINX_THEME_MAP = REPO / "docker/website/nginx-theme-map.conf"
-NGINX_PROXY_CONF = REPO / "docker/website/nginx-proxy.conf.j2"</code></pre>
+NGINX_PROXY_CONF = REPO / "docker/website/nginx-proxy.conf.j2"
 
-<h3>Pattern 1: file existence</h3>
-
-<p>Boring but useful. Catching a missing file in CI is much better than a failed deploy at 2am.</p>
-
-<pre><code>def test_nginx_default_conf_exists():
+def test_nginx_default_conf_exists():
     assert NGINX_DEFAULT.exists()
 
 def test_nginx_theme_map_exists():
     assert NGINX_THEME_MAP.exists()</code></pre>
+
+<p>Catching a missing file in CI beats a failed deploy at 2am. This is also the only place you'll ever need to update if a file moves.</p>
 
 <h3>Pattern 2: directive presence</h3>
 
@@ -68,13 +77,13 @@ def test_nginx_theme_map_exists():
     def test_sub_filter_once_off(self):
         assert "sub_filter_once off" in NGINX_DEFAULT.read_text()</code></pre>
 
-<p>Each of these has caught a real mistake. When reorganising the config I once removed the <code>charset_types</code> directive. The CDN started serving CSS without a charset header, which broke content-type detection in some clients. A test would have caught it at commit time.</p>
+<p>The charset test is what would have caught the first bug above. A directive that takes one line to remove takes one test to protect.</p>
 
 <h3>Pattern 3: location block ordering</h3>
 
 <p>Nginx selects location blocks in a defined priority order: exact match (<code>=</code>), then preferential prefix (<code>^~</code>), then regex (<code>~</code> and <code>~*</code>), then longest prefix, then the default <code>/</code>. Regex locations always beat a plain <code>location /</code> prefix — regardless of where they appear in the file. File order only matters when <em>multiple regex blocks</em> could match the same request: nginx picks the first one listed.</p>
 
-<p>So the ordering test below is not a correctness guard (the regex block wins either way), but a convention guard. When you have several regex blocks — say, one for static assets and one for API paths — their relative order determines which one fires for ambiguous URLs. Enforcing a canonical order in the config keeps that logic stable as the file grows:</p>
+<p>So the test below is not a correctness guard (the regex block wins over <code>location /</code> either way), but a convention guard. When you have several regex blocks — one for static assets, one for API paths — their relative order determines which one fires for ambiguous URLs. Enforcing a canonical order keeps that logic stable as the file grows:</p>
 
 <pre><code>def test_static_location_before_root_location(self):
     content = NGINX_DEFAULT.read_text()
@@ -82,11 +91,11 @@ def test_nginx_theme_map_exists():
     root_pos = content.index("location /")
     assert static_pos &lt; root_pos</code></pre>
 
-<p>The test also documents intent: the static assets block is meant to be the first thing evaluated. If someone adds another regex block above it that accidentally matches <code>.css</code> files, this won't catch that — but it does catch the common mistake of appending a new <code>location</code> block at the end of the file without thinking about order.</p>
+<p>The test also documents intent: the static assets block is meant to be evaluated first. It won't catch a new regex block inserted above it that accidentally matches <code>.css</code> files — but it does catch the common mistake of appending a new block at the end of the file without thinking about order, which is what caused the third bug above.</p>
 
 <h3>Pattern 4: negative assertions</h3>
 
-<p>Some constraints are about absence. <code>Set-Cookie</code> headers must only appear in <code>location /</code>, not in the static assets block — otherwise every image and CSS file sets a cookie, which bypasses CDN caching entirely:</p>
+<p>Some constraints are about absence. <code>Set-Cookie</code> must only appear in <code>location /</code>, not in the static assets block — otherwise every image and CSS file sets a cookie, which prevents the CDN from caching any of them:</p>
 
 <pre><code>def test_set_cookie_not_in_static_location(self):
     content = NGINX_DEFAULT.read_text()
@@ -95,7 +104,7 @@ def test_nginx_theme_map_exists():
     static_block = content[static_start:root_start]
     assert "Set-Cookie" not in static_block</code></pre>
 
-<p>The same pattern catches <code>Cache-Control</code> leaking into the HTML block, where it shouldn't appear:</p>
+<p>The same pattern catches <code>Cache-Control</code> leaking into the HTML block, where it should not appear:</p>
 
 <pre><code>def test_cache_header_not_in_root_location(self):
     content = NGINX_DEFAULT.read_text()
@@ -139,7 +148,7 @@ class TestWebsiteProxyWwwRedirect:
 
 <h3>Pattern 6: cross-file consistency</h3>
 
-<p>Some invariants span multiple files. My nginx config uses <code>sub_filter</code> to rewrite CSS filenames for theme switching. The filename in the <code>sub_filter</code> directive must exactly match the filename referenced in the HTML templates. These live in different files. This test enforces that:</p>
+<p>Some invariants span multiple files. My nginx config uses <code>sub_filter</code> to rewrite CSS filenames for theme switching. The filename in the <code>sub_filter</code> directive must exactly match the filename referenced in the HTML <code>&lt;link&gt;</code> tags — and these live in different files. This test enforces that agreement:</p>
 
 <pre><code>def test_sub_filter_targets_style_clean_css(self):
     # Must match the filename used in HTML &lt;link&gt; tags
@@ -148,16 +157,7 @@ class TestWebsiteProxyWwwRedirect:
 def test_theme_map_default_is_clean(self):
     assert "default     /style-clean.css;" in NGINX_THEME_MAP.read_text()</code></pre>
 
-<p>When I renamed <code>style.css</code> to <code>style-mono.css</code>, the <code>sub_filter</code> target had already been updated but the HTML templates still referenced the old name. Theme switching silently stopped working. This consistency test now catches that class of mistake.</p>
-
-<h3>Real bugs these tests caught</h3>
-
-<ul>
-  <li><strong>Missing <code>charset</code> on CSS</strong>: a config reorganisation removed <code>charset_types</code>. CSS was served without a charset header; the CDN mis-detected content type.</li>
-  <li><strong>Wrong <code>sub_filter</code> target after a rename</strong>: renamed <code>style.css</code> → <code>style-mono.css</code>; <code>sub_filter</code> still targeted the old path; theme switching stopped working silently.</li>
-  <li><strong>Regex location ordering</strong>: adding a new <code>location ~*</code> block above the static assets block caused it to match <code>.css</code> files first, skipping the cache headers.</li>
-  <li><strong><code>Set-Cookie</code> at server level</strong>: during a refactor, the cookie-setting logic was left outside of <code>location /</code>; every static asset response started setting a cookie.</li>
-</ul>
+<p>This is what catches the second bug above. When I renamed <code>style.css</code> to <code>style-mono.css</code>, the <code>sub_filter</code> target was updated but the HTML templates were not. The mismatch was invisible until a visitor with a stale cookie reported that theme switching did nothing. The consistency test would have caught it at commit time.</p>
 
 <h3>Running the tests</h3>
 
@@ -174,13 +174,7 @@ tests/test_website.py::TestWebsiteProxyWwwRedirect::test_with_www_redirect_is_30
 
 <h3>What this does not cover</h3>
 
-<p>Text-based tests cannot verify that nginx actually serves the right response, that TLS terminates correctly, or that the CDN behaves end-to-end. For that you need integration tests against a real nginx instance (Docker Compose makes this straightforward) or smoke tests against production. But text-based tests catch the structural mistakes — wrong file, missing directive, wrong order, wrong filename — cheaply and fast. They run in milliseconds with no infrastructure.</p>
-
-<h3>Conclusion</h3>
-
-<p>If you run nginx in your homelab and have never tested the configuration files, start with three patterns: directive presence, location block ordering, and negative assertions about things that must not appear in certain blocks. Add Jinja2 rendering if you use Ansible templates. Run it in CI.</p>
-
-<p>Nginx configuration is code. Treat it like code.</p>
+<p>Text-based tests cannot verify that nginx actually serves the right response, that TLS terminates correctly, or that the CDN behaves end-to-end. For that you need integration tests against a real nginx instance or smoke tests against production. But text-based tests catch the structural mistakes — wrong file, missing directive, wrong order, wrong filename — fast and with no infrastructure. If you haven't tested your nginx config yet, patterns 2 and 4 are the highest-value starting point; you can write your first three tests in under five minutes.</p>
 
 <footer>benni.tech · <a href="/contact/#impressum">impressum</a> · style: <a href="?style=clean">clean</a> <a href="?style=mono">mono</a> <a href="?style=brutal">brutal</a> · connectivity: <a href="/ping.txt">check</a></footer>
 </body>
