@@ -5,16 +5,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Getting started with Microsoft Azure using Terraform — provisioning cloud resources with infrastructure as code instead of ARM templates.">
 <title>Getting Started with Azure and Terraform · benni.tech</title>
-<link rel="stylesheet" href="/style-clean.css?v=202610192033">
+<link rel="stylesheet" href="/style-clean.css?v=202610210900">
+<link rel="canonical" href="https://benni.tech/articles/getting-started-with-azure-and-terraform/">
+<link rel="alternate" type="application/rss+xml" title="benni.tech" href="/rss.xml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Getting Started with Azure and Terraform · benni.tech">
+<meta property="og:description" content="Getting started with Microsoft Azure using Terraform — provisioning cloud resources with infrastructure as code instead of ARM templates.">
+<meta property="og:url" content="https://benni.tech/articles/getting-started-with-azure-and-terraform/">
+<meta property="og:site_name" content="benni.tech">
+<meta property="article:published_time" content="2021-09-26T00:00:00Z">
+<meta property="article:author" content="Benjamin Boortz">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Getting Started with Azure and Terraform",
+  "description": "Getting started with Microsoft Azure using Terraform — provisioning cloud resources with infrastructure as code instead of ARM templates.",
+  "datePublished": "2021-09-26",
+  "author": {
+    "@type": "Person",
+    "name": "Benjamin Boortz",
+    "url": "https://benni.tech/"
+  },
+  "url": "https://benni.tech/articles/getting-started-with-azure-and-terraform/",
+  "publisher": {
+    "@type": "Person",
+    "name": "Benjamin Boortz"
+  }
+}
+</script>
 </head>
 <body>
 <header>
-  <h1><a href="/">benni.tech</a></h1>
+  <p class="site-name"><a href="/">benni.tech</a></p>
   <nav><a href="/">home</a><a href="/cv/">cv</a><a href="/projects/">projects</a><a href="/articles/">articles</a><a href="/hamradio/">hamradio</a><a href="/bookmarks/">bookmarks</a><a href="/changelog/">changelog</a><a href="/contact/">contact</a></nav>
 </header>
 
-<h2>Getting Started with Azure and Terraform</h2>
-<p class="date">2021-09-26</p>
+<h1>Getting Started with Azure and Terraform</h1>
+<p><time class="date" datetime="2021-09-26">2021-09-26</time></p>
 
 <p>Today I thought lets try <a href="https://azure.com">Azure</a> as a cloud provider because I have never used Azure. I have used a couple of different other cloud provider but for whatever reason never Azure. First I had a look into how to provison resources on Azure in an automatd manner. Their own provisioning tool is <a href="https://azure.microsoft.com/en-us/features/resource-manager/">Azure Resource Manager</a> which is a DSL that must be written in json. Well, this is for me as an vim user. So that I have decided to do my first tries using a tool I am familier with. So that I have tried <a href="https://terraform.io">Terraform</a> which is a nother language but from my perspective by far simpler to write using a simple text editor.</p>
 <h3>Prerequesites</h3>

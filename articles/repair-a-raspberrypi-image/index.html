@@ -5,16 +5,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="How to repair a Raspberry Pi that crashes into kernel panic — diagnosing via serial console and recovering the disk image.">
 <title>How to repair a Raspberry Pi disk image · benni.tech</title>
-<link rel="stylesheet" href="/style-clean.css?v=202610192033">
+<link rel="stylesheet" href="/style-clean.css?v=202610210900">
+<link rel="canonical" href="https://benni.tech/articles/repair-a-raspberrypi-image/">
+<link rel="alternate" type="application/rss+xml" title="benni.tech" href="/rss.xml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to repair a Raspberry Pi disk image · benni.tech">
+<meta property="og:description" content="How to repair a Raspberry Pi that crashes into kernel panic — diagnosing via serial console and recovering the disk image.">
+<meta property="og:url" content="https://benni.tech/articles/repair-a-raspberrypi-image/">
+<meta property="og:site_name" content="benni.tech">
+<meta property="article:published_time" content="2023-02-22T00:00:00Z">
+<meta property="article:author" content="Benjamin Boortz">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How to repair a Raspberry Pi disk image",
+  "description": "How to repair a Raspberry Pi that crashes into kernel panic — diagnosing via serial console and recovering the disk image.",
+  "datePublished": "2023-02-22",
+  "author": {
+    "@type": "Person",
+    "name": "Benjamin Boortz",
+    "url": "https://benni.tech/"
+  },
+  "url": "https://benni.tech/articles/repair-a-raspberrypi-image/",
+  "publisher": {
+    "@type": "Person",
+    "name": "Benjamin Boortz"
+  }
+}
+</script>
 </head>
 <body>
 <header>
-  <h1><a href="/">benni.tech</a></h1>
+  <p class="site-name"><a href="/">benni.tech</a></p>
   <nav><a href="/">home</a><a href="/cv/">cv</a><a href="/projects/">projects</a><a href="/articles/">articles</a><a href="/hamradio/">hamradio</a><a href="/bookmarks/">bookmarks</a><a href="/changelog/">changelog</a><a href="/contact/">contact</a></nav>
 </header>
 
-<h2>How to repair a Raspberry Pi disk image</h2>
-<p class="date">2023-02-22</p>
+<h1>How to repair a Raspberry Pi disk image</h1>
+<p><time class="date" datetime="2023-02-22">2023-02-22</time></p>
 
 <p>Issue: the Raspberry Pi (RPi) has crashed and the boot process ends up in a kernel panic. The reason is unclear.</p>
 <p>Connect the serial output from the RPi to an FTDI adapter to see the output. The exact model doesn't matter; a cheap one is fine. Wire the pins as follows:</p>

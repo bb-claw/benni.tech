@@ -1,4 +1,4 @@
-/* v: 2026-10-19 19:08 */
+/* v: 2026-10-21 09:00 */
 /* benni.tech - one small stylesheet, no fonts, no JS, no external requests. */
 :root {
   --bg: #fdfdfb;
@@ -28,8 +28,10 @@ body {
 a { color: var(--accent); text-decoration: none; }
 a:hover, a:focus { text-decoration: underline; }
 header { border-bottom: 1px solid var(--rule); padding-bottom: .5rem; margin-bottom: 1.5rem; }
-header h1 { font-size: 1.25rem; margin: 0; }
-header h1 a { color: var(--fg); }
+header h1, header .site-name { font-size: 1.25rem; margin: 0; }
+header h1 a, header .site-name a { color: var(--fg); }
+h1 { font-size: 1rem; margin: 2rem 0 .5rem; }
+h1::before { content: "# "; color: var(--muted); }
 nav { margin-top: .25rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: .1rem .75rem; }
 nav a { margin-right: 0; }
 h2 { font-size: 1rem; margin: 2rem 0 .5rem; }

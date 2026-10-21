@@ -1,4 +1,4 @@
-/* v: 2026-10-19 19:08 */
+/* v: 2026-10-21 09:00 */
 /* benni.tech - brutal theme */
 :root {
   --bg: #fffff0;
@@ -24,8 +24,9 @@ header {
   margin-bottom: 1.5rem;
   box-shadow: var(--shadow);
 }
-header h1 { font-size: 1.25rem; margin: 0; }
-header h1 a { color: var(--fg); }
+header h1, header .site-name { font-size: 1.25rem; margin: 0; }
+header h1 a, header .site-name a { color: var(--fg); }
+h1 { font-size: 1.1rem; margin: 2rem 0 .5rem; border-bottom: 3px solid var(--rule); padding-bottom: .2rem; }
 nav { margin-top: .25rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: .1rem .75rem; }
 nav a { margin-right: 0; color: var(--fg); }
 h2 { font-size: 1.1rem; margin: 2rem 0 .5rem; border-bottom: 3px solid var(--rule); padding-bottom: .2rem; }

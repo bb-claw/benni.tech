@@ -1,2 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /articles/testing-nginx-configuration-v2/
+
+Sitemap: https://benni.tech/sitemap.xml
