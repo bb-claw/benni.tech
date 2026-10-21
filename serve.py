@@ -56,9 +56,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    import sys
+    port = int(sys.argv[1]) if len(sys.argv) > 1 else PORT
+    bind = sys.argv[2] if len(sys.argv) > 2 else "127.0.0.1"
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
-    print(f"Serving benni.tech at http://localhost:{PORT}")
+    print(f"Serving benni.tech at http://{bind}:{port}")
     print(f"  ?style=mono    — default theme")
     print(f"  ?style=brutal  — brutal theme")
     print(f"  ?style=clean   — clean theme")
-    http.server.test(HandlerClass=Handler, port=PORT, bind="127.0.0.1")
+    http.server.test(HandlerClass=Handler, port=port, bind=bind)
