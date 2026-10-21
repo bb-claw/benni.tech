@@ -38,6 +38,11 @@ rsync -av --delete --exclude .git --exclude README.md --exclude LICENSE ./ user@
 
 **New page or article** — copy an existing `*/index.html`, update `<title>`, `<meta name="description">`, and content. For a new top-level page also add it to the `<nav>` in every page.
 
+**New article checklist** — after creating the article:
+1. Prepend a `<li>` to `articles/index.html`
+2. Prepend an `<item>` to `rss.xml` and update `<lastBuildDate>` (RFC 822: `LC_TIME=en_US.UTF-8 date -d "YYYY-MM-DD" '+%a, %d %b %Y 00:00:00 +0000'`)
+3. Prepend a `<li>` to `changelog/index.html`
+
 **Meta descriptions** — every page must have `<meta name="description" content="...">` between the viewport meta and `<title>`. Keep it under 160 characters. `about/index.html` (redirect) is exempt.
 
 **Changelog** — update `changelog/index.html` whenever visible content changes (not for tooling or CSS-only changes). Prepend one `<li>`:

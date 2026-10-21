@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>benni.tech</title>
+    <link>https://benni.tech</link>
+    <description>Articles by Benjamin Boortz on Linux, nginx, Rust, and homelab infrastructure.</description>
+    <language>en</language>
+    <lastBuildDate>Tue, 20 Oct 2026 00:00:00 +0000</lastBuildDate>
+
+    <item>
+      <title>172 Nginx Tests in 0.31 Seconds — Without Running Nginx</title>
+      <link>https://benni.tech/articles/testing-nginx-configuration/</link>
+      <guid>https://benni.tech/articles/testing-nginx-configuration/</guid>
+      <pubDate>Tue, 20 Oct 2026 00:00:00 +0000</pubDate>
+    </item>
+
+    <item>
+      <title>Project Idea: Temperature Monitoring for a Heating</title>
+      <link>https://benni.tech/articles/sensor-mqtt-project/</link>
+      <guid>https://benni.tech/articles/sensor-mqtt-project/</guid>
+      <pubDate>Wed, 08 Mar 2023 00:00:00 +0000</pubDate>
+    </item>
+
+    <item>
+      <title>How to repair a Raspberry Pi disk image</title>
+      <link>https://benni.tech/articles/repair-a-raspberrypi-image/</link>
+      <guid>https://benni.tech/articles/repair-a-raspberrypi-image/</guid>
+      <pubDate>Wed, 22 Feb 2023 00:00:00 +0000</pubDate>
+    </item>
+
+    <item>
+      <title>Zip file downloaded via batch file/cmd is corrupted</title>
+      <link>https://benni.tech/articles/stackoverflow-q70520216/</link>
+      <guid>https://benni.tech/articles/stackoverflow-q70520216/</guid>
+      <pubDate>Wed, 29 Dec 2021 00:00:00 +0000</pubDate>
+    </item>
+
+    <item>
+      <title>Fallback DHCP server -- is it possible?</title>
+      <link>https://benni.tech/articles/stackoverflow-q70520107/</link>
+      <guid>https://benni.tech/articles/stackoverflow-q70520107/</guid>
+      <pubDate>Wed, 29 Dec 2021 00:00:00 +0000</pubDate>
+    </item>
+
+    <item>
+      <title>How to handle error in unwrap() function?</title>
+      <link>https://benni.tech/articles/stackoverflow-q70509834/</link>
+      <guid>https://benni.tech/articles/stackoverflow-q70509834/</guid>
+      <pubDate>Tue, 28 Dec 2021 00:00:00 +0000</pubDate>
+    </item>
+
+    <item>
+      <title>Simple Logger erroring on init</title>
+      <link>https://benni.tech/articles/stackoverflow-q70487458/</link>
+      <guid>https://benni.tech/articles/stackoverflow-q70487458/</guid>
+      <pubDate>Sun, 26 Dec 2021 00:00:00 +0000</pubDate>
+    </item>
+
+    <item>
+      <title>Rust Single threaded Persistent TCP Server</title>
+      <link>https://benni.tech/articles/stackoverflow-q70479643/</link>
+      <guid>https://benni.tech/articles/stackoverflow-q70479643/</guid>
+      <pubDate>Sat, 25 Dec 2021 00:00:00 +0000</pubDate>
+    </item>
+
+    <item>
+      <title>How to import a function from another folder in the folder above</title>
+      <link>https://benni.tech/articles/stackoverflow-q69636018/</link>
+      <guid>https://benni.tech/articles/stackoverflow-q69636018/</guid>
+      <pubDate>Tue, 19 Oct 2021 00:00:00 +0000</pubDate>
+    </item>
+
+    <item>
+      <title>Getting Started with Azure and Terraform</title>
+      <link>https://benni.tech/articles/getting-started-with-azure-and-terraform/</link>
+      <guid>https://benni.tech/articles/getting-started-with-azure-and-terraform/</guid>
+      <pubDate>Sun, 26 Sep 2021 00:00:00 +0000</pubDate>
+    </item>
+
+    <item>
+      <title>How IPFS is showing up-to-date Information</title>
+      <link>https://benni.tech/articles/how-ipfs-is-showing-up-to-date-information/</link>
+      <guid>https://benni.tech/articles/how-ipfs-is-showing-up-to-date-information/</guid>
+      <pubDate>Thu, 23 Sep 2021 00:00:00 +0000</pubDate>
+    </item>
+
+    <item>
+      <title>How to flush DNS Cache in Firefox</title>
+      <link>https://benni.tech/articles/how-to-flush-dns-cache-in-firefox/</link>
+      <guid>https://benni.tech/articles/how-to-flush-dns-cache-in-firefox/</guid>
+      <pubDate>Wed, 15 Sep 2021 00:00:00 +0000</pubDate>
+    </item>
+
+    <item>
+      <title>Hello World</title>
+      <link>https://benni.tech/articles/hello-world/</link>
+      <guid>https://benni.tech/articles/hello-world/</guid>
+      <pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate>
+    </item>
+
+    <item>
+      <title>My first tries with Rust</title>
+      <link>https://benni.tech/articles/my-first-tries-with-rust/</link>
+      <guid>https://benni.tech/articles/my-first-tries-with-rust/</guid>
+      <pubDate>Sun, 10 Jun 2018 00:00:00 +0000</pubDate>
+    </item>
+
+  </channel>
+</rss>
