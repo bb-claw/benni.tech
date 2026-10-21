@@ -10,99 +10,113 @@
     <item>
       <title>172 Nginx Tests in 0.31 Seconds — Without Running Nginx</title>
       <link>https://benni.tech/articles/testing-nginx-configuration/</link>
-      <guid>https://benni.tech/articles/testing-nginx-configuration/</guid>
+      <guid isPermaLink="true">https://benni.tech/articles/testing-nginx-configuration/</guid>
       <pubDate>Tue, 20 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Test nginx config files with Python and pytest — no running process needed. Directive checks, location ordering, Jinja2 templates, and real bugs caught.</description>
     </item>
 
     <item>
       <title>Project Idea: Temperature Monitoring for a Heating</title>
       <link>https://benni.tech/articles/sensor-mqtt-project/</link>
-      <guid>https://benni.tech/articles/sensor-mqtt-project/</guid>
+      <guid isPermaLink="true">https://benni.tech/articles/sensor-mqtt-project/</guid>
       <pubDate>Wed, 08 Mar 2023 00:00:00 +0000</pubDate>
+      <description>Monitoring home heating performance using temperature sensors and MQTT — a project idea born from a real heating fault.</description>
     </item>
 
     <item>
       <title>How to repair a Raspberry Pi disk image</title>
       <link>https://benni.tech/articles/repair-a-raspberrypi-image/</link>
-      <guid>https://benni.tech/articles/repair-a-raspberrypi-image/</guid>
+      <guid isPermaLink="true">https://benni.tech/articles/repair-a-raspberrypi-image/</guid>
       <pubDate>Wed, 22 Feb 2023 00:00:00 +0000</pubDate>
+      <description>How to repair a Raspberry Pi that crashes into kernel panic — diagnosing via serial console and recovering the disk image.</description>
     </item>
 
     <item>
       <title>Zip file downloaded via batch file/cmd is corrupted</title>
       <link>https://benni.tech/articles/stackoverflow-q70520216/</link>
-      <guid>https://benni.tech/articles/stackoverflow-q70520216/</guid>
+      <guid isPermaLink="true">https://benni.tech/articles/stackoverflow-q70520216/</guid>
       <pubDate>Wed, 29 Dec 2021 00:00:00 +0000</pubDate>
+      <description>Fixing a zip file that gets corrupted when downloaded via a Windows batch file — Stack Overflow diagnosis and solution.</description>
     </item>
 
     <item>
       <title>Fallback DHCP server -- is it possible?</title>
       <link>https://benni.tech/articles/stackoverflow-q70520107/</link>
-      <guid>https://benni.tech/articles/stackoverflow-q70520107/</guid>
+      <guid isPermaLink="true">https://benni.tech/articles/stackoverflow-q70520107/</guid>
       <pubDate>Wed, 29 Dec 2021 00:00:00 +0000</pubDate>
+      <description>Is a fallback DHCP server possible? — Stack Overflow answer on DHCP failover and redundancy configuration.</description>
     </item>
 
     <item>
       <title>How to handle error in unwrap() function?</title>
       <link>https://benni.tech/articles/stackoverflow-q70509834/</link>
-      <guid>https://benni.tech/articles/stackoverflow-q70509834/</guid>
+      <guid isPermaLink="true">https://benni.tech/articles/stackoverflow-q70509834/</guid>
       <pubDate>Tue, 28 Dec 2021 00:00:00 +0000</pubDate>
+      <description>How to handle errors from Rust's unwrap() — Stack Overflow answer on Result and Option error handling.</description>
     </item>
 
     <item>
       <title>Simple Logger erroring on init</title>
       <link>https://benni.tech/articles/stackoverflow-q70487458/</link>
-      <guid>https://benni.tech/articles/stackoverflow-q70487458/</guid>
+      <guid isPermaLink="true">https://benni.tech/articles/stackoverflow-q70487458/</guid>
       <pubDate>Sun, 26 Dec 2021 00:00:00 +0000</pubDate>
+      <description>Fixing a simple logger that errors on initialization in Rust — Stack Overflow answer.</description>
     </item>
 
     <item>
       <title>Rust Single threaded Persistent TCP Server</title>
       <link>https://benni.tech/articles/stackoverflow-q70479643/</link>
-      <guid>https://benni.tech/articles/stackoverflow-q70479643/</guid>
+      <guid isPermaLink="true">https://benni.tech/articles/stackoverflow-q70479643/</guid>
       <pubDate>Sat, 25 Dec 2021 00:00:00 +0000</pubDate>
+      <description>Building a single-threaded persistent TCP server in Rust — Stack Overflow answer with code examples.</description>
     </item>
 
     <item>
       <title>How to import a function from another folder in the folder above</title>
       <link>https://benni.tech/articles/stackoverflow-q69636018/</link>
-      <guid>https://benni.tech/articles/stackoverflow-q69636018/</guid>
+      <guid isPermaLink="true">https://benni.tech/articles/stackoverflow-q69636018/</guid>
       <pubDate>Tue, 19 Oct 2021 00:00:00 +0000</pubDate>
+      <description>How to import a function from a module in a parent directory in Python — Stack Overflow answer.</description>
     </item>
 
     <item>
       <title>Getting Started with Azure and Terraform</title>
       <link>https://benni.tech/articles/getting-started-with-azure-and-terraform/</link>
-      <guid>https://benni.tech/articles/getting-started-with-azure-and-terraform/</guid>
+      <guid isPermaLink="true">https://benni.tech/articles/getting-started-with-azure-and-terraform/</guid>
       <pubDate>Sun, 26 Sep 2021 00:00:00 +0000</pubDate>
+      <description>Getting started with Microsoft Azure using Terraform — provisioning cloud resources with infrastructure as code instead of ARM templates.</description>
     </item>
 
     <item>
       <title>How IPFS is showing up-to-date Information</title>
       <link>https://benni.tech/articles/how-ipfs-is-showing-up-to-date-information/</link>
-      <guid>https://benni.tech/articles/how-ipfs-is-showing-up-to-date-information/</guid>
+      <guid isPermaLink="true">https://benni.tech/articles/how-ipfs-is-showing-up-to-date-information/</guid>
       <pubDate>Thu, 23 Sep 2021 00:00:00 +0000</pubDate>
+      <description>How IPFS (InterPlanetary File System) serves content and resolves content addresses to show up-to-date information.</description>
     </item>
 
     <item>
       <title>How to flush DNS Cache in Firefox</title>
       <link>https://benni.tech/articles/how-to-flush-dns-cache-in-firefox/</link>
-      <guid>https://benni.tech/articles/how-to-flush-dns-cache-in-firefox/</guid>
+      <guid isPermaLink="true">https://benni.tech/articles/how-to-flush-dns-cache-in-firefox/</guid>
       <pubDate>Wed, 15 Sep 2021 00:00:00 +0000</pubDate>
+      <description>How to flush the DNS cache in Mozilla Firefox without restarting the browser — a quick step-by-step guide.</description>
     </item>
 
     <item>
       <title>Hello World</title>
       <link>https://benni.tech/articles/hello-world/</link>
-      <guid>https://benni.tech/articles/hello-world/</guid>
+      <guid isPermaLink="true">https://benni.tech/articles/hello-world/</guid>
       <pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate>
+      <description>First post on benni.tech, originally published on IPFS with Hugo. An introduction to the blog and its decentralized hosting setup.</description>
     </item>
 
     <item>
       <title>My first tries with Rust</title>
       <link>https://benni.tech/articles/my-first-tries-with-rust/</link>
-      <guid>https://benni.tech/articles/my-first-tries-with-rust/</guid>
+      <guid isPermaLink="true">https://benni.tech/articles/my-first-tries-with-rust/</guid>
       <pubDate>Sun, 10 Jun 2018 00:00:00 +0000</pubDate>
+      <description>First experiments with Rust in 2018, inspired by Writing an OS in Rust. Covers ownership, borrowing, and early impressions of the language.</description>
     </item>
 
   </channel>
