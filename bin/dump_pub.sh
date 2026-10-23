@@ -13,10 +13,10 @@ if [[ ! -f "$SRC" ]]; then
     exit 1
 fi
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ORIGINAL="$(basename "$SRC")"
 PREFIX="$(date +%Y-%m-%d)-$(openssl rand -hex 8)"
-DEST="$SCRIPT_DIR/pub/${PREFIX}-${ORIGINAL}"
+DEST="$REPO/pub/${PREFIX}-${ORIGINAL}"
 
 cp "$SRC" "$DEST"
 echo "https://benni.tech/pub/${PREFIX}-${ORIGINAL}"

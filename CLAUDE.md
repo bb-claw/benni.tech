@@ -11,22 +11,26 @@ index.html              home page: bio, Mini Feed (3 items), changelog link
 cv/ projects/ bookmarks/ contact/   one index.html each (clean URLs)
 articles/<slug>/        old blog posts (2021, converted from Hugo; same URLs)
 about/                  redirect from old Hugo /about/ to /contact/
+pub/                    flat file dump (shared via bin/dump_pub.sh)
 style-clean.css         default theme (beige/hister)
 style-mono.css          terminal/monospace theme
 style-brutal.css        brutalist theme
 ping.txt                "ok\n" — connectivity-check endpoint (linked from footer)
+bin/                    local tooling scripts (not deployed as content)
+config/                 deployment config consumed by homelab (not deployed as content)
 ```
 
 ## Preview
 
 ```sh
 python3 -m http.server 8000
+# or: bin/serve.sh
 ```
 
 ## Deploy
 
 ```sh
-rsync -av --delete --exclude .git --exclude README.md --exclude LICENSE ./ user@host:/var/www/benni.tech/
+rsync -av --delete --exclude .git --exclude README.md --exclude LICENSE --exclude bin/ --exclude config/ ./ user@host:/var/www/benni.tech/
 ```
 
 ## Adding content
