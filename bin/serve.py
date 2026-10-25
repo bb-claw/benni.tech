@@ -22,7 +22,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
         # Active style: query param wins over cookie
         cookie_style = self._read_cookie("style")
-        self._active_style = self._new_style or cookie_style or "mono"
+        self._active_style = self._new_style or cookie_style or "clean"
 
         super().do_GET()
 
@@ -36,10 +36,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         if path.endswith(".html") or path.endswith("/") or path == "":
             content = source.read()
             active = getattr(self, "_active_style", "mono")
-            if active == "brutal":
-                content = content.replace(b"/style.css", b"/style-brutal.css")
-            elif active == "clean":
-                content = content.replace(b"/style.css", b"/style-clean.css")
+            css = f"/style-{active}.css".encode()
+            content = content.replace(b"/style-clean.css", css)
             outputfile.write(content)
         else:
             super().copyfile(source, outputfile)
@@ -59,7 +57,7 @@ if __name__ == "__main__":
     import sys
     port = int(sys.argv[1]) if len(sys.argv) > 1 else PORT
     bind = sys.argv[2] if len(sys.argv) > 2 else "127.0.0.1"
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     print(f"Serving benni.tech at http://{bind}:{port}")
     print(f"  ?style=mono    — default theme")
     print(f"  ?style=brutal  — brutal theme")
