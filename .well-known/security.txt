@@ -1,0 +1,4 @@
+Contact: mailto:bennib@mailbox.org
+Expires: 2027-11-07T00:00:00Z
+Preferred-Languages: en, de
+Canonical: https://benni.tech/.well-known/security.txt
