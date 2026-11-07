@@ -5,7 +5,15 @@
     <link>https://benni.tech</link>
     <description>Articles by Benjamin Boortz on Linux, nginx, Rust, and homelab infrastructure.</description>
     <language>en</language>
-    <lastBuildDate>Tue, 20 Oct 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 25 Oct 2026 00:00:00 +0000</lastBuildDate>
+
+    <item>
+      <title>Your Phone Is a Black Box in Your Homelab. Mine Isn't Anymore.</title>
+      <link>https://benni.tech/articles/termux-sync-agent/</link>
+      <guid isPermaLink="true">https://benni.tech/articles/termux-sync-agent/</guid>
+      <pubDate>Sun, 25 Oct 2026 00:00:00 +0000</pubDate>
+      <description>How I stopped my phone from being a black box in my homelab by running a read-only sync observer in Termux — same REST API as my servers.</description>
+    </item>
 
     <item>
       <title>172 Nginx Tests in 0.31 Seconds — Without Running Nginx</title>

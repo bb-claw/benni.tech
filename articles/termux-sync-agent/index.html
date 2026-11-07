@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="How I stopped my phone from being a black box in my homelab by running a read-only sync observer in Termux — same REST API as my servers.">
+<title>Your Phone Is a Black Box in Your Homelab. Mine Isn't Anymore. · benni.tech</title>
+<link rel="stylesheet" href="/style-clean.css?v=202610210900">
+<link rel="canonical" href="https://benni.tech/articles/termux-sync-agent/">
+<link rel="alternate" type="application/rss+xml" title="benni.tech" href="/rss.xml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Your Phone Is a Black Box in Your Homelab. Mine Isn't Anymore.">
+<meta property="og:description" content="How I stopped my phone from being a black box in my homelab by running a read-only sync observer in Termux — same REST API as my servers.">
+<meta property="og:url" content="https://benni.tech/articles/termux-sync-agent/">
+<meta property="og:site_name" content="benni.tech">
+<meta property="article:published_time" content="2026-10-25T00:00:00Z">
+<meta property="article:author" content="Benjamin Boortz">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Your Phone Is a Black Box in Your Homelab. Mine Isn't Anymore.",
+  "description": "How I stopped my phone from being a black box in my homelab by running a read-only sync observer in Termux — same REST API as my servers.",
+  "datePublished": "2026-10-25",
+  "author": {
+    "@type": "Person",
+    "name": "Benjamin Boortz",
+    "url": "https://benni.tech/"
+  },
+  "url": "https://benni.tech/articles/termux-sync-agent/",
+  "publisher": {
+    "@type": "Person",
+    "name": "Benjamin Boortz"
+  }
+}
+</script>
+</head>
+<body>
+<header>
+  <p class="site-name"><a href="/">benni.tech</a></p>
+  <nav><a href="/">home</a><a href="/cv/">cv</a><a href="/projects/">projects</a><a href="/articles/">articles</a><a href="/hamradio/">hamradio</a><a href="/bookmarks/">bookmarks</a><a href="/changelog/">changelog</a><a href="/contact/">contact</a></nav>
+</header>
+
+<h1>Your Phone Is a Black Box in Your Homelab. Mine Isn't Anymore.</h1>
+<p><time class="date" datetime="2026-10-25">2026-10-25</time></p>
+
+<p>On a Thursday I noticed a note I had edited on my phone the day before was not on my laptop. Nextcloud said synced on both sides. The phone had no error. I had no idea how long the drift had been accumulating — the app gives you a spinner and a green checkmark and nothing else.</p>
+
+<p>Every server in my homelab has a <code>/status</code> endpoint I can <code>curl</code> over Tailscale. The phone had nothing. It was the only device in my setup I could not observe without picking it up.</p>
+
+<p>What follows requires an Android phone, Termux, Tailscale on all devices, and a Linux server you control. If you are running Nextcloud without a homelab behind it, this is not for you — but the problem it solves is.</p>
+
+<h3>The insight: you don't need to see inside the app</h3>
+
+<p>The Nextcloud Android app gives you no queryable interface. You cannot ask it what it is doing, what it last synced, or why it stopped. But the app is not the only source of truth — it leaves files behind, and Nextcloud serves those same files over WebDAV. An observer outside the app can compare the two and report the difference.</p>
+
+<p>That is what the agent does. It runs in Termux, never touches your files, and checks each configured folder by listing what is on disk and what Nextcloud serves over WebDAV. The diff is the sync state. No root, no app hooks, no Nextcloud API beyond standard WebDAV.</p>
+
+<h3>The technique in 50 lines</h3>
+
+<p>If you do not have the full homelab stack, you can run this standalone. It needs only Python — no <code>pip</code>, no dependencies, works in Termux after <code>pkg install python</code> and on any desktop Python 3.6+.</p>
+
+<pre><code>#!/usr/bin/env python3
+# Check whether a local folder matches its Nextcloud counterpart over WebDAV.
+# Usage: python3 nc-check.py &lt;url&gt; &lt;user&gt; &lt;app-password&gt; &lt;remote-path&gt; &lt;local-path&gt;
+# &lt;remote-path&gt; is relative to your Nextcloud files root, e.g. Notes or Documents/Work
+import sys, urllib.request, urllib.parse, xml.etree.ElementTree as ET
+from base64 import b64encode
+from pathlib import Path
+
+def webdav_list(url, user, password, remote_path):
+    dav = "{}/remote.php/dav/files/{}/{}/".format(
+        url.rstrip("/"), urllib.parse.quote(user, safe=""), remote_path.strip("/")
+    )
+    auth = "Basic " + b64encode("{}:{}".format(user, password).encode()).decode()
+    req = urllib.request.Request(dav, method="PROPFIND",
+                                  headers={"Depth": "1", "Authorization": auth})
+    with urllib.request.urlopen(req) as r:
+        tree = ET.fromstring(r.read())
+    ns = {"d": "DAV:"}
+    out = {}
+    for resp in tree.findall("d:response", ns):
+        if resp.find(".//d:collection", ns) is not None:
+            continue  # skip the directory entry itself
+        href = (resp.findtext("d:href", namespaces=ns) or "").rstrip("/")
+        name = urllib.parse.unquote(href.split("/")[-1])
+        el = resp.find(".//d:getcontentlength", ns)
+        out[name] = int(el.text) if el is not None else 0
+    return out
+
+def local_list(local_path):
+    return {f.name: f.stat().st_size for f in Path(local_path).iterdir() if f.is_file()}
+
+if len(sys.argv) != 6:
+    sys.exit("usage: nc-check.py &lt;url&gt; &lt;user&gt; &lt;app-password&gt; &lt;remote-path&gt; &lt;local-path&gt;")
+_, url, user, pw, remote, local_path = sys.argv
+
+remote_files = webdav_list(url, user, pw, remote)
+local_files  = local_list(local_path)
+
+behind   = sorted(remote_files.keys() - local_files.keys())
+ahead    = sorted(local_files.keys() - remote_files.keys())
+mismatch = sorted(k for k in local_files.keys() &amp; remote_files.keys()
+                  if local_files[k] != remote_files[k])
+
+if not behind and not ahead and not mismatch:
+    print("✓ in sync")
+else:
+    for label, files in [("behind", behind), ("ahead", ahead), ("size mismatch", mismatch)]:
+        if files:
+            print("{} — {} file(s):".format(label, len(files)))
+            for f in files[:10]: print("  " + f)</code></pre>
+
+<p>Use a dedicated <strong>app password</strong> (Nextcloud Settings → Security → App passwords), not your main password. The script compares by file name and size — fast, but won't catch a file that was silently corrupted with the same size. For the phone, the local path is wherever the Nextcloud app stores its files; on Android this is typically <code>/storage/emulated/0/Android/media/com.nextcloud.client/nextcloud/&lt;user&gt;/&lt;folder&gt;</code>, though it varies.</p>
+
+<p>This checks one folder at one depth level. The full agent adds battery and network context, recursive folder walks, photo upload tracking, automatic polling, and the REST endpoint so you can query it from elsewhere. But this is the core of it.</p>
+
+<h3>What the agent reports</h3>
+
+<p>Here is what <code>curl -s -H "Authorization: Bearer $TOKEN" http://fairphone-6.tail326738.ts.net:8765/status</code> returned when the Thursday drift finally had a name:</p>
+
+<pre><code>{
+  "device": "mobile",
+  "daemon_running": false,
+  "last_sync": "2026-10-22T11:03:00Z",
+  "problems": ["folder_behind:brain"],
+  "battery": {"percentage": 67, "plugged": false, "status": "DISCHARGING"},
+  "network": {"wifi_connected": true},
+  "server": {"reachable": true, "webdav_auth": true, "latency_ms": 23},
+  "folders": [{
+    "name": "brain",
+    "local_files": 847,
+    "remote_files": 850,
+    "behind": [
+      "daily/2026-10-23.md",
+      "daily/2026-10-24.md",
+      "daily/2026-10-25.md"
+    ],
+    "ahead": [],
+    "conflicts": []
+  }]
+}</code></pre>
+
+<p>Wi-Fi connected, battery fine, server reachable, WebDAV auth working — so nothing environmental. Three daily notes from the last three days were on the server but not on the phone. The Nextcloud app had simply stopped downloading them, silently, at some point on Wednesday. The fix was opening the app and pulling to refresh.</p>
+
+<p>The fields worth noting: <code>daemon_running: false</code> here does not mean the agent is down — it means there is an active problem. (<code>true</code> means everything matches.) <code>last_sync</code> is the last time everything agreed, not a log line from the Nextcloud app. Differences must persist 15 minutes before they appear in <code>problems</code> — a note you just edited does not count.</p>
+
+<h3>Installing it</h3>
+
+<p>Install Termux, Termux:API, and Termux:Boot from <strong>F-Droid</strong> — not the Play Store; the Play Store builds are unmaintained and miss API features. Open Termux:Boot once so Android registers it as a boot handler.</p>
+
+<p>The agent needs two packages:</p>
+
+<pre><code>pkg install -y python termux-api</code></pre>
+
+<p>That is the only <code>pkg install</code>. The agent itself is stdlib-only — no <code>pip</code> needed in Termux, no virtualenv, no dependency hell on a phone.</p>
+
+<p>The install script writes the agent, the restart loop, and a Termux:Boot autostart entry:</p>
+
+<pre><code>MCP_URL=https://server2.tail.ts.net:8766 \
+NC_PROVISION_CODE=&lt;one-time-code&gt; \
+bash termux-agent-install.sh</code></pre>
+
+<p>With <code>MCP_URL</code> and <code>NC_PROVISION_CODE</code> set, the script downloads the agent from the MCP server and pulls all configuration (token, Nextcloud URL, app password, folder paths) from a <code>/provision/mobile</code> endpoint — no manual editing. Without them it writes a template you fill in by hand. Either way the env file lands at <code>~/.config/nc-sync-agent/agent.env</code> with <code>chmod 600</code>.</p>
+
+<p>After the script finishes the agent is running and starts automatically after every reboot (via Termux:Boot). The MCP server on server2 picks it up next to the laptop agent.</p>
+
+<h3>The thing that will silently break this</h3>
+
+<p>Android battery optimisation kills background processes. This is the most common reason a Termux agent works during setup and stops working three days later.</p>
+
+<p>Go to Android Settings → Apps, and for each of these set Battery to <strong>Unrestricted</strong> (not "Optimised", not "Restricted"):</p>
+
+<ul>
+  <li>Termux</li>
+  <li>Termux:Boot</li>
+  <li>Tailscale</li>
+  <li>Nextcloud</li>
+</ul>
+
+<p>Also: Tailscale → Always-on VPN. Without this the phone drops off the Tailscale network when the screen is off and the agent becomes unreachable from server2.</p>
+
+<p>If you skip this step the agent will appear to work and then quietly disappear. The setup docs warn about this, but I am putting it here because it is the one thing that looks like a code problem but is an Android settings problem.</p>
+
+<h3>What the agent cannot tell you</h3>
+
+<p>It cannot see inside the Nextcloud app. It does not know whether the app is running, whether it is actively syncing, or what it last logged. It only sees the result: files on disk versus files on WebDAV.</p>
+
+<p>Files the app has not downloaded because they are not marked "available offline" are not on the phone by design. If you point the agent at a folder you have not set to offline-available, it will permanently report <code>folder_behind</code>. Configure only folders you actually have offline.</p>
+
+<p>Photos are matched by filename and size. If the Nextcloud app renames uploads on the server side, the agent may report <code>photos_stale</code> when the photos are actually there under a different name.</p>
+
+<h3>The result</h3>
+
+<p>The phone now appears in my homelab's device list next to the laptop and server2. One <code>make nextcloud-sync-mcp-devices</code> call shows all three, from the same MCP server, with the same fields. When sync breaks silently — and it does break silently, regularly — I get a Telegram alert within 15 minutes instead of finding out when a file is missing.</p>
+
+<p>The agent is a few hundred lines of Python. The hardest part was not the code — it was accepting that the phone could be a first-class node in a homelab rather than a peripheral you occasionally look at.</p>
+
+<footer>benni.tech · <a href="/contact/#impressum">impressum</a> · style: <a href="?style=clean">clean</a> <a href="?style=mono">mono</a> <a href="?style=brutal">brutal</a> · services: <a href="/ping.txt">ping</a> · <a href="/rss.xml">rss</a> · <a href="/sitemap.xml">sitemap</a></footer>
+</body>
+</html>
